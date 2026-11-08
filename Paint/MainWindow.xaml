@@ -1,12 +1,138 @@
-﻿<Window x:Class="Paint.MainWindow"
+<Window x:Class="Paint.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Paint"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Графический редактор" Height="720" Width="1080"
+        MinHeight="550" MinWidth="850"
+        WindowStartupLocation="CenterScreen"
+        Background="#F0F2F5">
 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#FFFFFF" BorderBrush="#D1D5DB" BorderThickness="0,0,0,1" Padding="8,6">
+            <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+                <GroupBox Header="Файл" Margin="4,0" Padding="4">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="BtnSave" Content="💾 Сохранить" Margin="2,0" Padding="8,4"
+                                ToolTip="Сохранить изображение (PNG, JPG, BMP)" Click="SaveButton_Click"/>
+                        <Button x:Name="BtnClear" Content="🗑 Очистить" Margin="2,0" Padding="8,4"
+                                ToolTip="Полностью очистить холст" Click="ClearButton_Click"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Инструменты" Margin="4,0" Padding="4">
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="RbPencil" Content="✏️ Карандаш" Tag="Pencil" IsChecked="True"
+                                     GroupName="Tools" Margin="2,0" Padding="8,4"
+                                     Style="{StaticResource {x:Type ToggleButton}}"
+                                     ToolTip="Рисование произвольных линий" Checked="ToolRadioButton_Checked"/>
+                        <RadioButton x:Name="RbLine" Content="📏 Линия" Tag="Line"
+                                     GroupName="Tools" Margin="2,0" Padding="8,4"
+                                     Style="{StaticResource {x:Type ToggleButton}}"
+                                     ToolTip="Построение прямой линии" Checked="ToolRadioButton_Checked"/>
+                        <RadioButton x:Name="RbRectangle" Content="⬛ Прямоугольник" Tag="Rectangle"
+                                     GroupName="Tools" Margin="2,0" Padding="8,4"
+                                     Style="{StaticResource {x:Type ToggleButton}}"
+                                     ToolTip="Построение прямоугольника" Checked="ToolRadioButton_Checked"/>
+                        <RadioButton x:Name="RbEllipse" Content="⭕ Эллипс" Tag="Ellipse"
+                                     GroupName="Tools" Margin="2,0" Padding="8,4"
+                                     Style="{StaticResource {x:Type ToggleButton}}"
+                                     ToolTip="Построение эллипса" Checked="ToolRadioButton_Checked"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Толщина" Margin="4,0" Padding="4">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel VerticalAlignment="Center" Margin="2,0,8,0">
+                            <TextBlock x:Name="ThicknessText" Text="2 пкс" HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                            <Slider x:Name="ThicknessSlider" Width="100" Minimum="1" Maximum="30" Value="2"
+                                    TickFrequency="1" IsSnapToTickEnabled="True"
+                                    ValueChanged="ThicknessSlider_ValueChanged" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Border Width="36" Height="36" Background="#FAFAFA" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="2">
+                            <Line x:Name="ThicknessPreviewLine" X1="4" Y1="18" X2="32" Y2="18"
+                                  Stroke="Black" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                        </Border>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Цвет рисования" Margin="4,0" Padding="4">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border x:Name="CurrentColorBorder" Width="36" Height="36" Background="Black"
+                                BorderBrush="#666666" BorderThickness="2" CornerRadius="3" Margin="2,0,8,0"
+                                ToolTip="Текущий выбранный цвет"/>
+
+                        <Grid Margin="0,0,6,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                <Button Width="18" Height="18" Margin="1" Background="#000000" Click="QuickColor_Click" Tag="#000000" ToolTip="Черный"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#7F7F7F" Click="QuickColor_Click" Tag="#7F7F7F" ToolTip="Серый"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#880015" Click="QuickColor_Click" Tag="#880015" ToolTip="Темно-красный"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#ED1C24" Click="QuickColor_Click" Tag="#ED1C24" ToolTip="Красный"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#FF7F27" Click="QuickColor_Click" Tag="#FF7F27" ToolTip="Оранжевый"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#FFF200" Click="QuickColor_Click" Tag="#FFF200" ToolTip="Желтый"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#22B14C" Click="QuickColor_Click" Tag="#22B14C" ToolTip="Зеленый"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#00A2E8" Click="QuickColor_Click" Tag="#00A2E8" ToolTip="Голубой"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                <Button Width="18" Height="18" Margin="1" Background="#FFFFFF" Click="QuickColor_Click" Tag="#FFFFFF" ToolTip="Белый"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#C3C3C3" Click="QuickColor_Click" Tag="#C3C3C3" ToolTip="Светло-серый"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#B97A57" Click="QuickColor_Click" Tag="#B97A57" ToolTip="Коричневый"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#FFAEC9" Click="QuickColor_Click" Tag="#FFAEC9" ToolTip="Розовый"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#FFC90E" Click="QuickColor_Click" Tag="#FFC90E" ToolTip="Золотой"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#B5E61D" Click="QuickColor_Click" Tag="#B5E61D" ToolTip="Салатовый"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#3F48CC" Click="QuickColor_Click" Tag="#3F48CC" ToolTip="Синий"/>
+                                <Button Width="18" Height="18" Margin="1" Background="#A349A4" Click="QuickColor_Click" Tag="#A349A4" ToolTip="Фиолетовый"/>
+                            </StackPanel>
+                        </Grid>
+
+                    </StackPanel>
+                </GroupBox>
+
+            </WrapPanel>
+        </Border>
+
+        <Border Grid.Row="1" Background="#DCE1E7">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Border HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20"
+                        Background="White" BorderBrush="#A0AAB5" BorderThickness="1">
+                    <Canvas x:Name="DrawingCanvas"
+                            Width="960" Height="600"
+                            Background="White"
+                            ClipToBounds="True"
+                            Cursor="Pen"
+                            MouseDown="DrawingCanvas_MouseDown"
+                            MouseMove="DrawingCanvas_MouseMove"
+                            MouseUp="DrawingCanvas_MouseUp"
+                            LostMouseCapture="DrawingCanvas_LostMouseCapture"/>
+                </Border>
+            </ScrollViewer>
+        </Border>
+
+        <StatusBar Grid.Row="2" Background="#F8F9FA" BorderBrush="#D1D5DB" BorderThickness="0,1,0,0">
+            <StatusBarItem>
+                <TextBlock x:Name="StatusToolText" Text="Инструмент: Карандаш"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock x:Name="StatusCoordsText" Text="X: 0, Y: 0"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="Размер холста: 960 × 600 пкс"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
