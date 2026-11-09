@@ -26,8 +26,6 @@ public partial class MainWindow : Window
         UpdateThicknessDisplay();
     }
 
-    #region Выбор инструмента (Панель инструментов)
-
     private void ToolRadioButton_Checked(object sender, RoutedEventArgs e)
     {
         if (_toolManager == null) return;
@@ -55,10 +53,6 @@ public partial class MainWindow : Window
             }
         }
     }
-
-    #endregion
-
-    #region Обработка событий холста (Полиморфизм)
 
     private void DrawingCanvas_MouseDown(object sender, MouseButtonEventArgs e)
     {
@@ -99,10 +93,6 @@ public partial class MainWindow : Window
         Point point = Mouse.GetPosition(DrawingCanvas);
         _toolManager.OnMouseUp(point, DrawingCanvas);
     }
-
-    #endregion
-
-    #region Выбор цвета и толщины
 
     private void QuickColor_Click(object sender, RoutedEventArgs e)
     {
@@ -152,10 +142,6 @@ public partial class MainWindow : Window
         }
     }
 
-    #endregion
-
-    #region Очистка холста и Сохранение изображения
-
     private void ClearButton_Click(object sender, RoutedEventArgs e)
     {
         var result = MessageBox.Show(
@@ -203,5 +189,4 @@ public partial class MainWindow : Window
         }
     }
 
-    #endregion
 }
