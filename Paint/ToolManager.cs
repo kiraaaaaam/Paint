@@ -53,7 +53,7 @@ public class ToolManager
         }
     }
 
-    private void ApplySettingsToTool(Tool tool)
+    private void ApplySettingsToTool(Tool tool) // применяем настройки к текущему инструменту
     {
         if (tool != null)
         {
