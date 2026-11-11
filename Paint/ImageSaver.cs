@@ -24,27 +24,25 @@ public class ImageSaver
             throw new InvalidOperationException("Размер холста должен быть больше нуля.");
         }
 
-        //Буфер для итогового изображения
+        //созд изобрж в размер холста
         //Pbgra32 - 32-битный формат 
         RenderTargetBitmap renderBitmap = new RenderTargetBitmap(
             width, height, 96d, 96d, PixelFormats.Pbgra32);
         
-        //содержимое в отдельный битмап, не добавляя временные элементы в интерфейс
+        //временный DrawingVisual для рендеринга содержимого канваса
         DrawingVisual visual = new DrawingVisual();
-        using (DrawingContext dc = visual.RenderOpen())
+        using (DrawingContext dc = visual.RenderOpen())  //юз гарант закрытия после 
         {
             // Рисуем этой кистью прямоугольник размером с холст, заполняя его содержимым
             VisualBrush brush = new VisualBrush(canvas);
-            dc.DrawRectangle(brush, null, new Rect(0, 0, width, height));
+            dc.DrawRectangle(brush, null, new Rect(0, 0, width, height)); //у прямоуг нет обводки
         }
 
-        // рендер DrawingVisual в растровый буфер
+        //перенос нарисованного с временной в раст изобрж
         renderBitmap.Render(visual);
-
-        // Кодировщик преобразует битмап в формат файла
-        // Расширение сравнивается без учёта регистра благодаря ToLower()
+        
         BitmapEncoder encoder;
-        string extension = Path.GetExtension(filePath).ToLower();
+        string extension = Path.GetExtension(filePath).ToLower(); //пнг ПНГ
 
         switch (extension)
         {
@@ -62,11 +60,10 @@ public class ImageSaver
                 break;
         }
 
-        // Кодировщик принимает кадры; для этого изображения добавляем один кадр.
+        //кодируем растр изображение в выбранный формат и сохраняем в файл
         encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
 
-        // файлмод кр создаёт файл или перезаписывает сущ-й
-        // using гарантирует закрытие потока даже в случае ошибки при сохранении
+        //отк файл для записи, если не существует создаем
         using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
         {
             encoder.Save(fileStream);

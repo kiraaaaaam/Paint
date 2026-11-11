@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Paint.Tools;
 
-public class ToolManager
+public class ToolManager //привет
 {
     private Tool _currentTool;
     private Color _currentColor = Colors.Black;

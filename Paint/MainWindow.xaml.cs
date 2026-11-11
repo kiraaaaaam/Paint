@@ -26,7 +26,7 @@ public partial class MainWindow : Window
         UpdateThicknessDisplay();
     }
 
-    private void ToolRadioButton_Checked(object sender, RoutedEventArgs e)
+    private void ToolRadioButton_Checked(object sender, RoutedEventArgs e) 
     {
         if (_toolManager == null) return;
 

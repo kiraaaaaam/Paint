@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-public abstract class Tool
+public abstract class Tool 
 {
     private Color _color = Colors.Black;
     private double _thickness = 2.0;
